@@ -3,6 +3,7 @@ BUILD_DIR = out
 TOOL_DIR = tools
 RELEASE_FRAG_SHADERS = $(addprefix $(BUILD_DIR)/release/, $(wildcard resources/shaders/*.frag))
 RELEASE_VERT_SHADERS = $(addprefix $(BUILD_DIR)/release/, $(wildcard resources/shaders/*.vert))
+PROJECT_ROOT = /home/felix/roest_dev_project
 
 DEBUG_FRAG_SHADERS = $(addprefix $(BUILD_DIR)/debug/, $(wildcard resources/shaders/*.frag))
 DEBUG_VERT_SHADERS = $(addprefix $(BUILD_DIR)/debug/, $(wildcard resources/shaders/*.vert))
@@ -28,15 +29,24 @@ $(BUILD_DIR)/ $(TOOL_DIR)/:
 $(BUILD_DIR)%/ $(TOOL_DIR)%/:
 	mkdir -p $@
 
-roest/target/debug/%:
-	cd roest; cargo build --package $* --bin $*
+roest/target/debug/%: force-debug-build ;
 
 roest/target/release/%:
 	cd roest; cargo build --release --package $* --bin $*
 
+force-debug-build:
+	cd roest; cargo build --package mesh_importer --bin mesh_importer
+
+tool-root:
+	echo "$(PROJECT_ROOT)/"
+	export FS_ROOT="$(PROJECT_ROOT)/"
+
+runtime-root-%:
+	export FS_ROOT="$(PROJECT_ROOT)/$(BUILD_DIR)/%/"
+
 .SECONDEXPANSION:
 
-$(TOOL_DIR)/mesh_importer: roest/target/release/mesh_importer | $$(@D)/
+$(TOOL_DIR)/mesh_importer: roest/target/debug/mesh_importer | $$(@D)/
 	cp $< $@
 
 $(BUILD_DIR)/debug/resources/shaders/%.frag: resources/shaders/%.frag | $$(@D)/
