@@ -4,3 +4,4 @@ Cargo.lock
 Roest.iml
 cmake-build-debug/
 cmake-build-release/
+resources/meshes/
