@@ -9,6 +9,19 @@ layout (location = 2) uniform mat4 m;
 layout (location = 3) uniform mat4 v;
 layout (location = 4) uniform mat4 p;
 
+struct TestStruct {
+    vec3 data;
+    vec3 other_data;
+};
+
+uniform Defaults {
+    mat4 mvp;
+    mat4 mv;
+    vec3 test_arr[2];
+    TestStruct test_struct;
+    TestStruct test_struct_arr[3];
+} test;
+
 //layout (location = 5) uniform vec4 color;
 out VS_OUTPUT {
     vec3 position_worldspace;

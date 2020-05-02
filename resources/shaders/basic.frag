@@ -2,6 +2,19 @@
 
 layout (location = 5) uniform vec4 matColor;
 
+struct TestStruct {
+	vec3 data;
+	vec3 other_data;
+};
+
+uniform Defaults {
+	mat4 mvp;
+	mat4 mv;
+	vec3 test_arr[2];
+	TestStruct test_struct;
+	TestStruct test_struct_arr[3];
+} test;
+
 in VS_OUTPUT {
 	vec3 position_worldspace;
 	vec3 normal_cameraspace;
@@ -13,7 +26,7 @@ out vec4 color;
 
 void main() {
 	vec3 lightColor = vec3(1, 1, 1);
-	float lightPower = 20.0f;
+	float lightPower = 5.0f;
 
 	float distance = length(vec3(0, 0, 0) - IN.position_worldspace);
 
@@ -27,5 +40,5 @@ void main() {
 
 //	float cosalpha = clamp(dot(eye, reflection), 0, 1);
 
-	color = vec4(matColor.xyz * lightColor * lightPower * cosTheta / (distance * distance), 1);
+	color = vec4(test.test_struct.data * lightColor * lightPower * cosTheta / (distance * distance), 1);
 }
