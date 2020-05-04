@@ -25,8 +25,8 @@ in VS_OUTPUT {
 out vec4 color;
 
 void main() {
-	vec3 lightColor = vec3(1, 1, 1);
-	float lightPower = 5.0f;
+	vec3 lightColor = test.test_struct.data;
+	float lightPower = 20.0f;
 
 	float distance = length(vec3(0, 0, 0) - IN.position_worldspace);
 
@@ -40,5 +40,5 @@ void main() {
 
 //	float cosalpha = clamp(dot(eye, reflection), 0, 1);
 
-	color = vec4(test.test_struct.data * lightColor * lightPower * cosTheta / (distance * distance), 1);
+	color = vec4(matColor.xyz * lightColor * lightPower * cosTheta / (distance * distance), 1);
 }

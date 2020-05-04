@@ -31,7 +31,7 @@ out VS_OUTPUT {
 } OUT;
 
 void main() {
-    gl_Position = mvp * vec4(position, 1.0);
+    gl_Position = test.mvp * vec4(position, 1.0);
 
     OUT.position_worldspace = (m * vec4(position, 1.0)).xyz;
 
