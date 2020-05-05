@@ -2,18 +2,50 @@
 
 layout (location = 5) uniform vec4 matColor;
 
-struct TestStruct {
-	vec3 data;
-	vec3 other_data;
+struct PointLight {
+	vec3 position;
+
+	float constant;
+	float linear;
+	float quadratic;
+
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
 };
 
-uniform Defaults {
-	mat4 mvp;
-	mat4 mv;
-	vec3 test_arr[2];
-	TestStruct test_struct;
-	TestStruct test_struct_arr[3];
-} test;
+struct DirectionalLight {
+	vec3 direction;
+
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+};
+
+struct SpotLight {
+	vec3 position;
+	vec3 direction;
+
+	float inner_cone;
+	float outer_cone;
+
+	float constant;
+	float linear;
+	float quadratic;
+
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+};
+
+uniform Lights {
+	DirectionalLight directional;
+	PointLight[16] point_lights;
+	SpotLight[16] spot_lights;
+
+	int num_point_lights;
+	int num_spot_lights;
+} lights;
 
 in VS_OUTPUT {
 	vec3 position_worldspace;
