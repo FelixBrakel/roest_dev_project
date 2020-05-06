@@ -1,6 +1,11 @@
 #version 450
 
-layout (location = 5) uniform vec4 matColor;
+uniform Material {
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	float shininess;
+} material;
 
 struct PointLight {
 	vec3 position;
@@ -48,29 +53,39 @@ uniform Lights {
 } lights;
 
 in VS_OUTPUT {
-	vec3 position_worldspace;
-	vec3 normal_cameraspace;
-	vec3 eyedirection_cameraspace;
-	vec3 lightdirection_cameraspace;
+	vec3 position_viewspace;
+	vec3 normal_viewspace;
 } IN;
 
 out vec4 color;
 
+vec3 calc_point_light(PointLight light, vec3 normal, vec3 position, vec3 view_dir) {
+	vec3 ambient = light.ambient * material.ambient;
+
+	vec3 light_dir = normalize(light.position - position);
+	float theta_diff = max(dot(normal, light_dir), 0.0);
+	vec3 diffuse = light.diffuse * (theta_diff * material.diffuse);
+
+	vec3 reflect_dir = reflect(-light_dir, normal);
+	float theta_spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
+	vec3 specular = light.specular * (theta_spec * material.specular);
+
+	float distance = length(light.position - position);
+//	float attenuation = 1.0 / (light.constant + light.linear * distance +
+//	light.quadratic * (distance * distance));
+	float attenuation = 1.0;
+
+//	return (ambient * attenuation) + (diffuse * attenuation) + (specular * attenuation);
+	return (ambient * attenuation) + (diffuse * attenuation) + (specular * attenuation);
+
+}
+
 void main() {
-	vec3 lightColor = test.test_struct.data;
-	float lightPower = 20.0f;
+	vec3 result = vec3(0.0, 0.0, 0.0);
+	vec3 view_dir = normalize(-IN.position_viewspace);
+	for (int i = 0; i < lights.num_point_lights; ++i) {
+		result += calc_point_light(lights.point_lights[i], IN.normal_viewspace, IN.position_viewspace, view_dir);
+	}
 
-	float distance = length(vec3(0, 0, 0) - IN.position_worldspace);
-
-	vec3 n = normalize(IN.normal_cameraspace);
-	vec3 l = normalize(IN.lightdirection_cameraspace);
-
-	float cosTheta = clamp(dot(n, l), 0, 1);
-
-//	vec3 eye = normalize(IN.eyedirection_cameraspace);
-//	vec3 reflection = reflect(-l, n);
-
-//	float cosalpha = clamp(dot(eye, reflection), 0, 1);
-
-	color = vec4(matColor.xyz * lightColor * lightPower * cosTheta / (distance * distance), 1);
+	color = vec4(result, 1.0);
 }

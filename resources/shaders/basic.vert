@@ -3,12 +3,6 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 
-layout (location = 0) uniform mat4 mvp;
-layout (location = 1) uniform mat4 mv;
-layout (location = 2) uniform mat4 m;
-layout (location = 3) uniform mat4 v;
-layout (location = 4) uniform mat4 p;
-
 struct PointLight {
     vec3 position;
 
@@ -54,26 +48,24 @@ uniform Lights {
     int num_spot_lights;
 } lights;
 
-//layout (location = 5) light vec4 color;
+uniform Matrices {
+    mat4 mvp;
+    mat4 mv;
+    mat4 m;
+    mat4 v;
+    mat4 p;
+    mat3 n;
+} matrices;
+
 out VS_OUTPUT {
-    vec3 position_worldspace;
-    vec3 normal_cameraspace;
-    vec3 eyedirection_cameraspace;
-    vec3 lightdirection_cameraspace;
+    vec3 position_viewspace;
+    vec3 normal_viewspace;
 } OUT;
 
 void main() {
-    gl_Position = test.mvp * vec4(position, 1.0);
+    OUT.position_viewspace = (matrices.mv * vec4(position, 1.0)).xyz;
+    OUT.normal_viewspace = matrices.n * normal;
 
-    OUT.position_worldspace = (m * vec4(position, 1.0)).xyz;
-
-    vec3 position_cameraspace = (mv * vec4(position, 1.0)).xyz;
-
-    vec3 eyedirection_cameraspace = vec3(0, 0, 0) - position_cameraspace;
-    OUT.eyedirection_cameraspace = eyedirection_cameraspace;
-
-    vec3 lightposition_cameraspace = (v * vec4(0, 0, 0, 1.0)).xyz;
-    OUT.lightdirection_cameraspace = lightposition_cameraspace + eyedirection_cameraspace;
-
-    OUT.normal_cameraspace = (mv * vec4(normal, 0)).xyz;
+//    gl_Position = vec4(position, 1.0);
+    gl_Position = matrices.mvp * vec4(position, 1.0);
 }
