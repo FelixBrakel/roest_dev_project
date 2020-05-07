@@ -71,13 +71,11 @@ vec3 calc_point_light(PointLight light, vec3 normal, vec3 position, vec3 view_di
 	vec3 specular = light.specular * (theta_spec * material.specular);
 
 	float distance = length(light.position - position);
-//	float attenuation = 1.0 / (light.constant + light.linear * distance +
-//	light.quadratic * (distance * distance));
-	float attenuation = 1.0;
+	float attenuation = 1.0 / (light.constant +
+						light.linear * distance +
+						light.quadratic * (distance * distance));
 
-//	return (ambient * attenuation) + (diffuse * attenuation) + (specular * attenuation);
 	return (ambient * attenuation) + (diffuse * attenuation) + (specular * attenuation);
-
 }
 
 void main() {
