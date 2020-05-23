@@ -2,6 +2,7 @@
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 uv;
 
 struct PointLight {
     vec3 position;
@@ -60,9 +61,11 @@ uniform Matrices {
 out VS_OUTPUT {
     vec3 position_viewspace;
     vec3 normal_viewspace;
+    vec2 uv;
 } OUT;
 
 void main() {
+    OUT.uv = uv;
     OUT.position_viewspace = (matrices.mv * vec4(position, 1.0)).xyz;
     OUT.normal_viewspace = matrices.n * normal;
 
