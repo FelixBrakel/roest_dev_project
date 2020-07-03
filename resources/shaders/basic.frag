@@ -1,5 +1,5 @@
 #version 450
-#extension GL_ARB_bindless_texture : require
+#extension GL_ARB_bindless_texture : enable
 uniform Material {
 	vec3 ambient;
 	sampler2D diffuse;
@@ -65,7 +65,7 @@ vec3 calc_point_light(PointLight light, vec3 normal, vec3 position, vec3 view_di
 
 	vec3 light_dir = normalize(light.position - position);
 	float theta_diff = max(dot(normal, light_dir), 0.0);
-	vec3 diffuse = light.diffuse * (theta_diff * texture(material.diffuse, IN.uv));
+	vec3 diffuse = light.diffuse * (theta_diff * texture(material.diffuse, vec2(IN.uv.x, 1.0 - IN.uv.y)).xyz);
 
 	vec3 reflect_dir = reflect(-light_dir, normal);
 	float theta_spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
@@ -87,4 +87,5 @@ void main() {
 	}
 
 	color = vec4(result, 1.0);
+//	color = texture(material.diffuse, vec2(IN.uv.x, 1.0 - IN.uv.y));
 }
