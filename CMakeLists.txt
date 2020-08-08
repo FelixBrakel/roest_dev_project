@@ -19,10 +19,29 @@ ExternalProject_Add(
         LOG_OUTPUT_ON_FAILURE True
 )
 
-
 add_custom_command(
         TARGET roest_runtime POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/roest_runtime-prefix/resources
+)
+
+
+ExternalProject_Add(
+        scene_editor
+        DOWNLOAD_COMMAND ""
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND cargo build --package scene_editor
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/roest/target/debug/scene_editor ${CMAKE_BINARY_DIR}/scene_editor-prefix
+        BUILD_ALWAYS True
+        BINARY_DIR "${CMAKE_SOURCE_DIR}/roest"
+        INSTALL_COMMAND ""
+        BYPRODUCTS "${CMAKE_BINARY_DIR}/scene_editor-prefix/scene_editor"
+        LOG_BUILD True
+        LOG_OUTPUT_ON_FAILURE True
+)
+
+add_custom_command(
+        TARGET scene_editor POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/scene_editor-prefix/resources
 )
 
 #add_custom_command(
