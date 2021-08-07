@@ -6,42 +6,42 @@ project(roest_dev_project NONE)
 include(ExternalProject)
 
 ExternalProject_Add(
-        roest_runtime
+        player
         DOWNLOAD_COMMAND ""
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND cargo build --package roest_runtime
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/roest/target/debug/roest_runtime ${CMAKE_BINARY_DIR}/roest_runtime-prefix
+        BUILD_COMMAND cargo build --package roest_runtime --bin player
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/roest/target/debug/player ${CMAKE_BINARY_DIR}/player-prefix
         BUILD_ALWAYS True
         BINARY_DIR "${CMAKE_SOURCE_DIR}/roest"
         INSTALL_COMMAND ""
-        BYPRODUCTS "${CMAKE_BINARY_DIR}/roest_runtime-prefix/roest_runtime"
+        BYPRODUCTS "${CMAKE_BINARY_DIR}/roest_runtime-prefix/player"
         LOG_BUILD True
         LOG_OUTPUT_ON_FAILURE True
 )
 
 add_custom_command(
-        TARGET roest_runtime POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/roest_runtime-prefix/resources
+        TARGET player POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/player-prefix/resources
 )
 
 
 ExternalProject_Add(
-        scene_editor
+        editor
         DOWNLOAD_COMMAND ""
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND cargo build --package scene_editor
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/roest/target/debug/scene_editor ${CMAKE_BINARY_DIR}/scene_editor-prefix
+        BUILD_COMMAND cargo build --package roest_runtime --bin editor
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/roest/target/debug/editor ${CMAKE_BINARY_DIR}/editor-prefix
         BUILD_ALWAYS True
         BINARY_DIR "${CMAKE_SOURCE_DIR}/roest"
         INSTALL_COMMAND ""
-        BYPRODUCTS "${CMAKE_BINARY_DIR}/scene_editor-prefix/scene_editor"
+        BYPRODUCTS "${CMAKE_BINARY_DIR}/editor-prefix/editor"
         LOG_BUILD True
         LOG_OUTPUT_ON_FAILURE True
 )
 
 add_custom_command(
-        TARGET scene_editor POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/scene_editor-prefix/resources
+        TARGET editor POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/editor-prefix/resources
 )
 
 #add_custom_command(
