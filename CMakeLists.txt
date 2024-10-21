@@ -29,7 +29,7 @@ ExternalProject_Add(
         editor
         DOWNLOAD_COMMAND ""
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND cargo build --package roest_runtime --bin editor
+        BUILD_COMMAND cargo build --package roest_runtime --bin scene_editor
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/roest/target/debug/editor ${CMAKE_BINARY_DIR}/editor-prefix
         BUILD_ALWAYS True
         BINARY_DIR "${CMAKE_SOURCE_DIR}/roest"
